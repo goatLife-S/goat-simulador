@@ -10,10 +10,10 @@
 <body>
     <h1>Simulador finaceiros - Filhotes</h1>
 
-    Insira a quantidade de caprinos que voce vai vender: <input type="text" id="input_qntdC"><br>
-    De quanto em quanto tempo ocorrerá a venda (em meses): <input type="text" id="input_tempo"><br>
-    insira o valor do seu caprino: <input type="text" id="input_valorC" min="90"><br>
-    insira a temperatura atual:<input type="text" id="input_temperatura" min="13" max="40"><br>
+    Insira a quantidade de caprinos dentro do seu Capril <input type="text" id="input_qtd_caprinos">  <br>
+    Preco médio dos caprinos no capril <input type="text" name="" id="input_preco_caprino"> <br>
+    Peso médio do caprino ao abate <input type="text" name="" id="input_peso"> <br>
+    Preco média da venda da carne por Kg <input type="text" id="input_preco_medio">
 
     <br>
 
@@ -23,30 +23,27 @@
 
 </html>
 <script>
-    function calcular() {
-        var qntdC = Number(input_qntdC.value)
-        var valorC = Number(input_valorC.value)
-        var valorT = qntdC * valorC
-        var tempo = Number(input_tempo.value)
-        var temperatura = (input_temperatura.value)
+    function calcular(){
+        var qtd_caprinos = Number(input_qtd_caprinos.value); // qtd de caprinos em um Capril
+        var preco_medio_caprinos = Number(input_preco_caprino.value) // preco medio do rebanho no capril
+        var valor_caprino_capril = qtd_caprinos * preco_medio_caprinos; //valor total do rabanho do capril
+        var taxa_mortalidade = 0.20; // taxa de mortalidade em um capril pelo mal gereniciamento do capril
+        var taxa_mortalidade_reduzida = 0.20 - 0.18; // taxa de mortalidade reduzida com o nosso sensor de temperatura e umidade
+        var perdas_mortalidade_atual = taxa_mortalidade * qtd_caprinos; // perda mortalidade atual do cliente
+        var perdas_mortalizade_reduzida = taxa_mortalidade_reduzida * qtd_caprinos; // perda mortalidade reduzida depois da instalação dos sensores 
+        var perdas_valor_atual = taxa_mortalidade * valor_caprino_capril; // perda no valor total do rebanho do capril
+        var perdas_valor_reduzido = taxa_mortalidade_reduzida * valor_caprino_capril; // perda reduzida no valor total do capril
+        var peso_medio = Number(input_peso.value); // peso medio a cada abate do caprino mensal
+        var preco_vendido_kg = Number(input_preco_medio.value); // preço medio da venda da carne do caprino que o cliente deseja vender
+        var peso_total_carne =  qtd_caprinos * peso_medio; // peso total de carne produzido no mês
+        var valor_total_carne = peso_total_carne * preco_vendido_kg; // valor total da receita gerada pela venda da carne de caprinos no mês
+        var lucro_carne = valor_total_carne + (valor_total_carne * 0.15); //Lucro da venda da carne através da boa qualidade do animal
 
-        var morteCaprinos = qntdC * 0.18  // morte de 27 caprinos. ele ja esta tirando 27 + 27 e fazendo pelo tempo de vendas
-        morteCaprinos = morteCaprinos * tempo
-        morteCaprinos = qntdC - morteCaprinos
-        var valor_sem_monitoramento = morteCaprinos * valorC
+        div_mensagem.innerHTML = `Com base na quantidade de caprinos no seu capril e na taxa de mortalidade atual de 20%, estimamos que as perdas mensais devido à taxa de mortalidade sejam de ${perdas_mortalidade_atual} caprinos, Após a implementação dos sensores de temperatura e umidade, esperamos reduzir essa taxa em 2%, resultando em perdas mensais estimadas de ${perdas_mortalizade_reduzida} caprinos. <br>
+        Além disso, calculamos as perdas mensais em termos de valor total do rebanho. Com o valor total do seu rebanho estimado em R$ ${valor_caprino_capril}, as perdas mensais atuais devido à mortalidade representam aproximadamente R$${perdas_valor_atual}. Após a implementação dos sensores, esperamos reduzir essas perdas para R$${perdas_valor_reduzido}<br>.
+        Também consideramos um potencial ganho com a venda de carne de caprinos. Com um peso total de carne produzido por mês de ${peso_total_carne} kg e um preço médio de venda de R$ ${preco_vendido_kg} por kg, o ganho atual pela venda da carne será de R$${valor_total_carne}, o lucro estimado com a venda de carne é de R$${lucro_carne}.`
 
-
-        if (temperatura < 23) {
-            div_mensagem.innerHTML += `A temperatura ideal no capril é de 23.9 á 29.4. Porém a tempertatura atual é de ${temperatura}° graus celsius, e está a baixo da média. Fique de olho! <br> Com isso a quantidade de caprinos para venda, SEM monitoramento é de: ${morteCaprinos} e seu retorno financeiro SEM nosso monitoramento seria apenas de: R$${valor_sem_monitoramento}<br><br>Mas, com o nosso monitoramento e os CUIDADOS necessarios, voce passará a ganhar até: R$${valorT}`
-
-        } else if (temperatura >= 32.2) {
-            div_mensagem.innerHTML += `a temperatura ideal é de 23.9 á 29.4. Porém tempertatura está acima do ideal ${temperatura}°, seus animais correm perigo! <br> A quantidade de caprinos SEM monitoramento para venda é de: ${morteCaprinos} e o valor total SEM nosso monitoramento é de : R$${valor_sem_monitoramento}>Mas, com o nosso monitoramento e os CUIDADOS necessarios, voce passará a ganhar até: R$${valorT}`
-        } else if (temperatura >= 23.9 && temperatura <= 29.4) {
-            alert('a temperatura está confortavél! meus bixinhos não correm risco. Continue com os cuidados adequados.')
-        }
 
 
     }
-
-    //Possui clima temperado seco no inverno, e quente e chuvoso no verão, com médias históricas de temperatura máxima de 32ºC, mínima 13ºC e média de 22ºC.
 </script>
